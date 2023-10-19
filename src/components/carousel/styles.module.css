@@ -1,0 +1,66 @@
+.section_carousel {
+  overflow: hidden;
+  background: --background;
+  position: relative;
+  @apply h-[100%];
+}
+.carousel {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+  pointer-events: none;
+  @apply relative;
+}
+
+.carousel_item {
+  @apply cursor-pointer transition-all delay-150;
+  --items: 6;
+  --active: 0;
+  --porcent: 16.66%;
+  --width: clamp(300, 30vw, 400px);
+  --height: clamp(500px, 40vw, 600px);
+
+  --x: calc(var(--active) / var(--items) * 4000%);
+  --y: calc(var(--active) * 0%);
+
+  --rot: calc(var(--active) * 30deg);
+  --opacity: calc(var(--zIndex) / var(--items) * 2 - 1);
+  overflow: hidden;
+  position: absolute;
+  z-index: var(--zIndex);
+  width: var(--width);
+  height: var(--height);
+  margin: calc(var(--height) * -0.5) 0 0 calc(var(--width) * 0);
+  border-radius: 10px;
+  left: 5%;
+  user-select: none;
+  transform-origin: 0% 100%;
+  pointer-events: all;
+  transform: translate(var(--x), var(--y)) rotate(var(--rot));
+  transition: transform 0.8s cubic-bezier(0, 0.02, 0, 1);
+}
+
+.title {
+  position: absolute;
+  @apply absolute top-[26rem] z-50 flex flex-col gap-3 p-5 text-white backdrop-blur-sm;
+  transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);
+  font-size: clamp(8px, 1vw, 12px);
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.carousel_box {
+  /*position: absolute;*/
+  z-index: 1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /*height: 100%;*/
+  /*transition: opacity 0.8s cubic-bezier(0, 0.02, 0, 1);*/
+  opacity: var(--opacity);
+  @apply object-cover;
+}
+
+.carousel_img {
+  @apply h-[300px] max-h-max w-[300px] max-w-max object-cover lg:h-[500px] lg:w-[500px];
+  pointer-events: none;
+}

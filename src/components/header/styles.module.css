@@ -1,0 +1,6 @@
+.menu_item {
+  @apply cursor-pointer font-extralight text-[var(--secondary)] transition-opacity ease-linear hover:border-b-2 hover:border-[var(--secondary)] hover:font-normal hover:text-[var(--secondary)];
+}
+.active_menu {
+  @apply cursor-pointer border-b-2 border-[var(--secondary)] text-[var(--secondary)];
+}
