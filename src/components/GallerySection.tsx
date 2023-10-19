@@ -1,9 +1,9 @@
 'use client';
 import Carousel from '@/components/carousel/Carousel';
-import { setColorValue } from '@/hooks/useColor';
+import { useColorValue } from '@/hooks/useColor';
 
 export default function GallerySection() {
-  setColorValue({ primary: '#ffffff', secondary: '#ffffff', bg: '#3a41e4' });
+  useColorValue({ primary: '#ffffff', secondary: '#ffffff', bg: '#3a41e4' });
   const images: { image: string; name?: string; stack?: string }[] = [
     {
       image: '/images/gallery/mma_gym.png',

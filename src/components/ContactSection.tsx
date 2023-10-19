@@ -11,10 +11,10 @@ import {
 } from '@/lib/validations/contact_form';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { setColorValue } from '@/hooks/useColor';
+import { useColorValue } from '@/hooks/useColor';
 
 export default function ContactSection() {
-  setColorValue({ primary: '#ffffff', secondary: '#ffffff', bg: '#3a41e4' });
+  useColorValue({ primary: '#ffffff', secondary: '#ffffff', bg: '#3a41e4' });
   const [loading, setLoading] = useState<boolean>(false);
   const [isSubmitSuccessful, setSubmitSuccessful] = useState<boolean>(false);
   const { toast } = useToast();

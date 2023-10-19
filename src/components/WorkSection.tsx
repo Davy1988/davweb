@@ -1,7 +1,5 @@
 'use client';
-import { useEffect } from 'react';
-import { setColor } from '@/lib/utils';
-import { setColorValue } from '@/hooks/useColor';
+import { useColorValue } from '@/hooks/useColor';
 type EXP = {
   name: string;
   post: string;
@@ -9,7 +7,7 @@ type EXP = {
 };
 
 export default function WorkSection() {
-  setColorValue({ primary: '#3a41e4', secondary: '#3a41e4', bg: '#ffffff' });
+  useColorValue({ primary: '#3a41e4', secondary: '#3a41e4', bg: '#ffffff' });
 
   //return setColor({primary: '#ffffff', secondary: '#ffffff', bg: '#3a41e4'});;
 
