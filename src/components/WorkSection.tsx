@@ -49,7 +49,7 @@ export default function WorkSection() {
   ];
   return (
     <main className='z-auto my-4 flex min-h-screen animate-fade flex-col items-start animate-duration-[1000] animate-ease-linear'>
-      <h1 className='my-6 text-[var(--primary)] text-[2rem] sm:text-[2rem] md:text-[2rem] lg:text-[3rem]'>
+      <h1 className='my-6 text-[2rem] text-[var(--primary)] sm:text-[2rem] md:text-[2rem] lg:text-[3rem]'>
         Work experience
       </h1>
       <div className='grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-2'>
