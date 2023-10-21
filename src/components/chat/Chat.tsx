@@ -17,6 +17,7 @@ enum TYPE_ROLE {
 export default function Chat() {
   const [loading, setLoading] = useState<boolean>(false);
   const [show, setShow] = useState<boolean>(false);
+  const isOpen = useRef<boolean>(false);
   const [question, setQuestion] = useState<string>('');
   const messageEl = useRef<any>(null);
   const [messages, setMessages] = useState<MESSAGES[]>([
@@ -30,7 +31,8 @@ export default function Chat() {
 
   useEffect(() => {
     setTimeout(() => {
-      setShow(true);
+      if(!isOpen.current)
+        setShow(true);
     }, 10000);
   }, []);
 
@@ -41,6 +43,7 @@ export default function Chat() {
   }, [question]);
 
   const toogleShowChat = () => {
+    isOpen.current = true;
     return setShow(!show);
   };
 
