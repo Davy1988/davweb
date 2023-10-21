@@ -226,7 +226,7 @@ export default function Chat() {
         )}
       </div>
       {show && (
-        <div className='absolute bottom-20 right-0 flex w-96 flex-col rounded-md bg-white text-sm shadow-md transition-all'>
+        <div className='absolute bottom-20 right-0 flex w-72 sm:w-96 md:w-[30rem] lg:w-[32rem] max-w-[32rem] flex-col rounded-md bg-white text-sm shadow-md transition-all'>
           <div className='flex items-center justify-between rounded-t-md bg-white p-4 text-[var(--background-color)]'>
             <h3 className='m-0 text-lg font-normal'>davwebot</h3>
             <button
