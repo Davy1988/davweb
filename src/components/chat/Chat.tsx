@@ -228,7 +228,7 @@ export default function Chat() {
         )}
       </div>
       {show && (
-        <div className='lg:botton-20 fixed bottom-0 right-0 flex flex-1 flex-col justify-end rounded-tl-md rounded-tr-md border-b-0 bg-white text-sm shadow-md transition-all sm:absolute sm:bottom-20 sm:top-auto sm:h-auto sm:w-96 sm:rounded-md md:absolute md:bottom-20 md:top-auto md:w-[30rem] lg:absolute lg:top-auto lg:w-[32rem]'>
+        <div className='lg:botton-20 fixed bottom-0 right-0 h-max-[60%] flex flex-1 flex-col justify-end rounded-tl-md rounded-tr-md border-b-0 bg-white text-sm shadow-md transition-all sm:absolute sm:bottom-20 sm:top-auto sm:h-auto sm:w-96 sm:rounded-md md:absolute md:bottom-20 md:top-auto md:w-[30rem] lg:absolute lg:top-auto lg:w-[32rem]'>
           <div className='flex max-h-14 items-center justify-between rounded-t-md bg-white p-4 text-[var(--background-color)]'>
             <h3 className='m-0 text-lg font-normal'>davwebot</h3>
             <button
@@ -253,7 +253,7 @@ export default function Chat() {
           </div>
           <div
             ref={messageEl}
-            className='h-60 max-h-[65%] flex-1 overflow-y-auto p-4 sm:max-h-80'
+            className='h-60 max-h-96 flex-1 overflow-y-auto p-4 sm:max-h-80'
           >
             {messages.map((msg, index) => (
               <div
