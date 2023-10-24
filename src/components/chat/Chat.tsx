@@ -228,8 +228,8 @@ export default function Chat() {
         )}
       </div>
       {show && (
-        <div className='absolute bottom-20 right-0 flex w-72 max-w-[32rem] flex-col rounded-md bg-white text-sm shadow-md transition-all sm:w-96 md:w-[30rem] lg:w-[32rem]'>
-          <div className='flex items-center justify-between rounded-t-md bg-white p-4 text-[var(--background-color)]'>
+        <div className='lg:botton-20 fixed bottom-0 right-0 flex flex-1 flex-col justify-end rounded-tl-md rounded-tr-md border-b-0 bg-white text-sm shadow-md transition-all sm:absolute sm:bottom-20 sm:top-auto sm:h-auto sm:w-96 sm:rounded-md md:absolute md:bottom-20 md:top-auto md:w-[30rem] lg:absolute lg:top-auto lg:w-[32rem]'>
+          <div className='flex max-h-14 items-center justify-between rounded-t-md bg-white p-4 text-[var(--background-color)]'>
             <h3 className='m-0 text-lg font-normal'>davwebot</h3>
             <button
               onClick={toogleShowChat}
@@ -251,7 +251,10 @@ export default function Chat() {
               </svg>
             </button>
           </div>
-          <div ref={messageEl} className='max-h-60 flex-1 overflow-y-auto p-4'>
+          <div
+            ref={messageEl}
+            className='h-60 max-h-[65%] flex-1 overflow-y-auto p-4 sm:max-h-80'
+          >
             {messages.map((msg, index) => (
               <div
                 key={index}
@@ -266,8 +269,8 @@ export default function Chat() {
                   <div
                     className={
                       msg.roles === TYPE_ROLE.user
-                        ? 'max-w-[70%] rounded-lg bg-[var(--background-color)] px-4 py-2 text-white'
-                        : 'max-w-[70%] rounded-lg bg-gray-200 px-4 py-2 text-black'
+                        ? 'max-w-[90%] rounded-lg bg-[var(--background-color)] px-4 py-2 text-white'
+                        : 'max-w-[90%] rounded-lg bg-gray-200 px-4 py-2 text-black'
                     }
                   >
                     <span
