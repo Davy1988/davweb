@@ -40,7 +40,7 @@ export default function GallerySection() {
     <>
       <main className='relative flex min-h-full animate-fade-right flex-col justify-start py-5 animate-duration-[1000] animate-ease-linear'>
         <h1 className='text-[1rem] text-[var(--secondary)] sm:text-[1.2rem] md:text-[2rem] lg:text-[2rem]'>
-          Gallery
+          Projects
         </h1>
         <Carousel images={images} />
       </main>

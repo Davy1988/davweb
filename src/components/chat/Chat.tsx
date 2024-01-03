@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
 import style from './styles.module.css';
-import { query } from '@/lib/querySupabase';
 import Loading from '@/components/Loading';
+import { supabase } from '@/lib/supabase';
 
 type MESSAGES = {
   roles: TYPE_ROLE;
@@ -88,33 +88,35 @@ export default function Chat() {
       ]);
       setLoading(() => true);
       setQuestion('');
-      const context = await query(question, 1);
-      const response = await fetch(
-        `${process.env.BASE_OPEN_AI}/chat/completions`,
-        {
-          method: 'POST',
-          body: JSON.stringify({
-            model: 'gpt-3.5-turbo',
-            messages: [
-              {
-                role: 'system',
-                content: `You are a virtual assistant who is familiar with David Manuel's resume. 
+      let context = [{ content: '' }];
+      const responseContext = await fetch('/api/embedding', {
+        method: 'POST',
+        body: JSON.stringify({ query: question, n: 1 }),
+      });
+      if (responseContext.status === 200) {
+        const { data } = await responseContext.json();
+        const [{ embedding }] = data;
+        const { data: documents } = await supabase.rpc('match_documents', {
+          query_embedding: embedding,
+          match_count: 1,
+        });
+        context = documents;
+      }
+      const response = await fetch('/api/completion', {
+        method: 'POST',
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'system',
+              content: `You are a virtual assistant who is familiar with David Manuel's resume. 
                     You will respond professionally to the users according to the provided context: ${context
-                      .map((val) => val.pageContent)
+                      .map((val) => val.content)
                       .toString()}.`,
-              },
-              { role: 'user', content: question },
-            ],
-            max_tokens: 500,
-            temperature: 0,
-            stream: true,
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          },
-        }
-      );
+            },
+            { role: 'user', content: question },
+          ],
+        }),
+      });
       if (response !== null && response.body !== null) {
         // @ts-ignore
         response.body[Symbol.asyncIterator] = () => {
@@ -132,12 +134,17 @@ export default function Chat() {
       if (stream !== null) {
         for await (const chunk of stream) {
           const decodedChuck = decoder.decode(chunk);
-          const lines = decodedChuck
-            .split('\n')
-            .map((line) => line.replace('data:', ''))
-            .filter((line) => line.length > 0)
-            .filter((line) => !line.includes('DONE'))
-            .map((line) => JSON.parse(line));
+          let lines = [];
+          try {
+            lines = decodedChuck
+              .split('\n')
+              .map((line) => line.replace('data:', ''))
+              .filter((line) => line.length > 0)
+              .filter((line) => !line.includes('DONE'))
+              .map((line) => JSON.parse(line));
+          } catch (e) {
+            continue;
+          }
           lines.forEach((line) => {
             const {
               choices: [
@@ -173,6 +180,7 @@ export default function Chat() {
       }
       setLoading(() => false);
     } catch (e) {
+      console.log('Error', e);
       const errorTime = new Date().getUTCMilliseconds();
       const newErrorMessage: MESSAGES = {
         roles: TYPE_ROLE.bot,
@@ -202,17 +210,12 @@ export default function Chat() {
           <svg
             xmlns='http://www.w3.org/2000/svg'
             className='h-9 w-9 font-extrabold text-current'
-            width='32'
-            height='32'
             viewBox='0 0 256 256'
           >
-            <g fill='currentColor'>
-              <path
-                d='M200 56H56a24 24 0 0 0-24 24v112a24 24 0 0 0 24 24h144a24 24 0 0 0 24-24V80a24 24 0 0 0-24-24Zm-36 128H92a20 20 0 0 1 0-40h72a20 20 0 0 1 0 40Z'
-                opacity='.2'
-              />
-              <path d='M200 48h-64V16a8 8 0 0 0-16 0v32H56a32 32 0 0 0-32 32v112a32 32 0 0 0 32 32h144a32 32 0 0 0 32-32V80a32 32 0 0 0-32-32Zm16 144a16 16 0 0 1-16 16H56a16 16 0 0 1-16-16V80a16 16 0 0 1 16-16h144a16 16 0 0 1 16 16Zm-52-56H92a28 28 0 0 0 0 56h72a28 28 0 0 0 0-56Zm-28 16v24h-16v-24Zm-56 12a12 12 0 0 1 12-12h12v24H92a12 12 0 0 1-12-12Zm84 12h-12v-24h12a12 12 0 0 1 0 24Zm-92-68a12 12 0 1 1 12 12a12 12 0 0 1-12-12Zm88 0a12 12 0 1 1 12 12a12 12 0 0 1-12-12Z' />
-            </g>
+            <path
+              fill='currentColor'
+              d='M202.83 197.17a4 4 0 0 1-5.66 5.66L128 133.66l-69.17 69.17a4 4 0 0 1-5.66-5.66L122.34 128L53.17 58.83a4 4 0 0 1 5.66-5.66L128 122.34l69.17-69.17a4 4 0 1 1 5.66 5.66L133.66 128Z'
+            />
           </svg>
         ) : (
           <svg
@@ -228,9 +231,9 @@ export default function Chat() {
         )}
       </div>
       {show && (
-        <div className='lg:botton-20 fixed bottom-0 right-0 h-max-[60%] flex flex-1 flex-col justify-end rounded-tl-md rounded-tr-md border-b-0 bg-white text-sm shadow-md transition-all sm:absolute sm:bottom-20 sm:top-auto sm:h-auto sm:w-96 sm:rounded-md md:absolute md:bottom-20 md:top-auto md:w-[30rem] lg:absolute lg:top-auto lg:w-[32rem]'>
+        <div className='h-max-[60%] fixed bottom-0 right-0 flex flex-1 flex-col justify-end rounded-tl-md rounded-tr-md border-b-0 bg-white text-sm shadow-md transition-all sm:absolute sm:bottom-20 sm:top-auto sm:h-auto sm:w-96 sm:rounded-md md:absolute md:bottom-20 md:top-auto md:w-[30rem] lg:absolute lg:bottom-16 lg:top-auto lg:w-[32rem]'>
           <div className='flex max-h-14 items-center justify-between rounded-t-md bg-white p-4 text-[var(--background-color)]'>
-            <h3 className='m-0 text-lg font-normal'>davwebot</h3>
+            <h3 className='m-0 text-lg font-normal'>Chatbot</h3>
             <button
               onClick={toogleShowChat}
               className='cursor-pointer border-none bg-transparent text-gray-300 hover:text-[var(--background-color)]'
@@ -309,7 +312,7 @@ export default function Chat() {
                 onChange={(e) => setQuestion(e.target.value)}
                 required
                 className='w-3/4 flex-1 rounded-md border border-gray-300 px-4 py-2 outline-none'
-                placeholder='Write your question'
+                placeholder='Write message'
               />
               {loading ? (
                 <Loading />
@@ -320,7 +323,7 @@ export default function Chat() {
                 >
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
-                    className='h-5 w-5 font-extrabold text-current'
+                    className='h-5 w-5 font-extrabold text-current hover:-rotate-45'
                     viewBox='0 0 256 256'
                   >
                     <path

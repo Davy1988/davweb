@@ -5,6 +5,6 @@
 .chat_widget_container {
   position: absolute;
   bottom: 25px;
-  right: 35px;
+  right: 40px;
   flex-direction: column;
 }
