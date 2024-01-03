@@ -18,7 +18,6 @@ export async function POST(req: Request) {
     });
     return new Response(rs.body);
   } catch (e) {
-    console.log(e);
     return new Response(
       JSON.stringify({
         message: 'Please try again.Apologies for the inconvenience.',

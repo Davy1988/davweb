@@ -26,7 +26,6 @@ export async function POST(req: Request) {
       throw 'Error embedding data';
     }
   } catch (e) {
-    console.log(e);
     return new Response('Error embedding data', {
       status: 500,
     });
