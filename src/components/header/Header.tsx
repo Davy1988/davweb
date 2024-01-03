@@ -24,19 +24,19 @@ export default function Header() {
               Home
             </span>
           </Link>
-          <Link href={'/work'}>
+          <Link href={'/experience'}>
             <span
               className={
-                pathName === '/work' ? style.active_menu : style.menu_item
+                pathName === '/experience' ? style.active_menu : style.menu_item
               }
             >
-              Work
+              Experience
             </span>
           </Link>
           <Link href={'/projects'}>
             <span
               className={
-                pathName === '/gallery' ? style.active_menu : style.menu_item
+                pathName === '/projects' ? style.active_menu : style.menu_item
               }
             >
               Projects
