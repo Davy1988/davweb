@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import Header from '@/components/header/Header';
 import { Toaster } from '@/components/ui/toaster';
-import { Suspense } from 'react';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const montserrat = Montserrat({ subsets: ['latin'] });
 
@@ -28,7 +29,11 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`${montserrat.className} ${bodyClass}`}>
         <Header />
-        <main className='mx-6 h-full'>{children}</main>
+        <main className='mx-6 h-full'>
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </main>
         <Toaster />
       </body>
     </html>
