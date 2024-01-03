@@ -33,13 +33,13 @@ export default function Header() {
               Work
             </span>
           </Link>
-          <Link href={'/gallery'}>
+          <Link href={'/projects'}>
             <span
               className={
                 pathName === '/gallery' ? style.active_menu : style.menu_item
               }
             >
-              Gallery
+              Projects
             </span>
           </Link>
           <Link href={'/contact'}>
