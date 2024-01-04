@@ -133,44 +133,25 @@ export default function Chat() {
       const stream = response.body as unknown as AsyncIterable<any>;
       if (stream !== null) {
         for await (const chunk of stream) {
-          const decodedChuck = decoder.decode(chunk);
-          let lines = [];
-          lines = decodedChuck
-            .split('\n')
-            .map((line) => line.replace('data:', ''))
-            .filter((line) => line.length > 0)
-            .filter((line) => !line.includes('DONE'))
-            .map((line) => JSON.parse(line));
-          lines.forEach((line) => {
-            const {
-              choices: [
-                {
-                  delta: { content },
-                  finish_reason,
-                },
-              ],
-            } = line;
-            if (content && finish_reason !== 'stop') {
-              msgData += content;
-              const newBotMessage: MESSAGES = {
-                roles: TYPE_ROLE.bot,
-                message: msgData,
-                time: timeNewMessage,
-              };
-              setMessages((previous) => {
-                let temp = [
-                  ...previous.filter((val) => val.roles !== TYPE_ROLE.loading),
-                ];
-                const findIndex = temp.findIndex(
-                  (val) => val.time === timeNewMessage
-                );
-                if (findIndex !== -1) {
-                  temp[findIndex] = newBotMessage;
-                  return [...temp];
-                } else {
-                  return [...temp, newBotMessage];
-                }
-              });
+          const content = decoder.decode(chunk);
+          msgData += content;
+          const newBotMessage: MESSAGES = {
+            roles: TYPE_ROLE.bot,
+            message: msgData,
+            time: timeNewMessage,
+          };
+          setMessages((previous) => {
+            let temp = [
+              ...previous.filter((val) => val.roles !== TYPE_ROLE.loading),
+            ];
+            const findIndex = temp.findIndex(
+              (val) => val.time === timeNewMessage
+            );
+            if (findIndex !== -1) {
+              temp[findIndex] = newBotMessage;
+              return [...temp];
+            } else {
+              return [...temp, newBotMessage];
             }
           });
         }
