@@ -146,10 +146,11 @@ export default function Chat() {
               choices: [
                 {
                   delta: { content },
+                  finish_reason,
                 },
               ],
             } = line;
-            if (content) {
+            if (content && finish_reason !== 'stop') {
               msgData += content;
               const newBotMessage: MESSAGES = {
                 roles: TYPE_ROLE.bot,
@@ -176,6 +177,7 @@ export default function Chat() {
       }
       setLoading(() => false);
     } catch (e) {
+      console.log(e);
       const errorTime = new Date().getUTCMilliseconds();
       const newErrorMessage: MESSAGES = {
         roles: TYPE_ROLE.bot,
