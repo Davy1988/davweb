@@ -135,25 +135,22 @@ export default function Chat() {
         for await (const chunk of stream) {
           const decodedChuck = decoder.decode(chunk);
           let lines = [];
-          try {
-            lines = decodedChuck
-              .split('\n')
-              .map((line) => line.replace('data:', ''))
-              .filter((line) => line.length > 0)
-              .filter((line) => !line.includes('DONE'))
-              .map((line) => JSON.parse(line));
-          } catch (e) {
-            continue;
-          }
+          lines = decodedChuck
+            .split('\n')
+            .map((line) => line.replace('data:', ''))
+            .filter((line) => line.length > 0)
+            .filter((line) => !line.includes('DONE'))
+            .map((line) => JSON.parse(line));
           lines.forEach((line) => {
             const {
               choices: [
                 {
                   delta: { content },
+                  finish_reason,
                 },
               ],
             } = line;
-            if (content) {
+            if (content && finish_reason !== 'stop') {
               msgData += content;
               const newBotMessage: MESSAGES = {
                 roles: TYPE_ROLE.bot,
@@ -180,7 +177,6 @@ export default function Chat() {
       }
       setLoading(() => false);
     } catch (e) {
-      console.log('Error', e);
       const errorTime = new Date().getUTCMilliseconds();
       const newErrorMessage: MESSAGES = {
         roles: TYPE_ROLE.bot,
